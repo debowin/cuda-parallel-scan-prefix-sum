@@ -1,0 +1,28 @@
+1. Near the top of scan largearray.cu, set #define DEFAULT NUM ELEMENTS
+to 16777216. Set #define MAX RAND to 3. Then, record the performance
+results when you run the code without arguments. Include the host (CPU)
+and device (GPU) processing times and the speedup.
+
+Processing 16777216 elements...
+CPU Processing time: 85.247993 (ms)
+GPU Processing time: 1.796544 (ms)
+Speedup: 47.451104X
+
+
+2. Describe how you handled input arrays that are not a power of two in size.
+Also describe any other performance-enhancing optimizations you added.
+
+This was handled by padding the inputs with zeroes until their size became multiples of
+TILE_SIZE(power of 2). Also, I made each thread take care of two input elements since for n elements,
+only n/2 threads need to be active at any time. This let me have a maximum of TILE_SIZE of 2048 per block.
+So now, each thread block could process more elements and this helped the kernel run faster.
+
+
+3. How do the measured FLOPS rates for the CPU and GPU kernels com-
+pare with each other, and with the theoretical performance limits of each
+architecture? For your GPU implementation, discuss what bottlenecks
+are likely limiting the performance of your code.
+
+CPU - 0.197 GFlops
+GPU - 6.8 GFlops
+Multiple kernel launches.
